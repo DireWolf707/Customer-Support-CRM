@@ -2,6 +2,28 @@
 {% load tailwind_filters %}
 {% block title %}Sign Up{% endblock %}
 
+{% block script %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+function sendOTP(){
+  fetch("http://127.0.0.1:8080/2FA/send",
+  {
+    method: "POST",
+    body: JSON.stringify({phone: $("#id_phone").val()}),
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+  }
+  ).then(
+    (res)=>console.log(res.json())
+    ).catch(
+      (err)=>console.log(err)
+      )
+}
+</script>
+{% endblock %}
+
 {% block content %}
 
 <form method="post" class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -9,27 +31,20 @@
   <h1 class="text-center mt-4">Sign Up</h1>
   {% csrf_token %}
   {{ form|crispy }}
+
+  <label for="otp" class="block text-gray-700 text-sm font-bold mb-2">
+    Otp<span class="asteriskField">*</span> 
+  </label> 
+  <div id="div_otp" class="mb-3 flex justify-between"> 
+  <input type="text" name="otp" maxlength="6" class="bg-white w-5/7 rounded-lg border text-gray-700 leading-normal focus:outline-none block px-4 appearance-none py-2 border-gray-300"
+  placeholder="6-digits" required="" id="otp"> 
+  <button class="bg-white w-2/7 rounded-lg border text-gray-500 hover:text-white hover:bg-indigo-400 px-4 py-2 border-gray-300" onclick="sendOTP()">Send Otp</button>
+  </div>
+  
   <div class="flex w-full">
     <button
       type="submit"
-      class="
-        flex
-        mt-2
-        items-center
-        justify-center
-        focus:outline-none
-        text-white text-sm
-        sm:text-base
-        bg-blue-500
-        hover:bg-blue-600
-        rounded-2xl
-        py-2
-        w-full
-        transition
-        duration-150
-        ease-in
-      "
-    >
+      class="flex mt-2 items-center justify-center focus:outline-none text-white text-sm sm:text-base bg-blue-500 hover:bg-blue-600 rounded-2xl py-2 w-full transition duration-150 ease-in">
       <span class="mr-2 uppercase">Sign Up</span>
       <span>
         <svg
