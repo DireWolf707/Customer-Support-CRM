@@ -10,6 +10,12 @@ class Ticket(models.Model):
         CALL = 'C', 'Call'
         SMS = 'S', 'Sms'
         WHATSAPP = 'W', 'Whatsapp'
+    
+    class Status(models.TextChoices):
+        UNCLAIMED = 'UC', 'Unclaimed'
+        CLAIMED = 'CL', 'Claimed'
+        ClOSED = 'CD', 'Closed'
+
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     lead = models.ForeignKey(User,on_delete=models.CASCADE,related_name='lead_tickets')
@@ -17,7 +23,9 @@ class Ticket(models.Model):
     description = models.TextField()
     open_time = models.DateTimeField(auto_now_add=True)
     close_time = models.DateTimeField(null=True,blank=True)
-    contact_preference = models.CharField(choices=ContactPreferences.choices,max_length=1)
+    contact_preference = models.CharField(choices=ContactPreferences.choices,max_length=1,blank=True,null=False)
+    status=models.CharField(choices=Status.choices,max_length=2,default=Status.UNCLAIMED)
+    by_call=models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return str(self.id)
