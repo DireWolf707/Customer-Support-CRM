@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block script %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+  function pricing(){
+    $("#about").hide()
+    $("#support").hide()
+    $("#pricing").show()
+  }
+  function support(){
+    $("#about").hide()
+    $("#pricing").hide()
+    $("#support").show()
+  }
+  function about(){
+    $("#pricing").hide()
+    $("#support").hide()
+    $("#about").show()
+  }
+</script>
+{% endblock %}
+
+{% block content %}
+{% include 'home/about.html' %}
+{% include 'home/pricing.html' %}
+{% include 'home/support.html' %}
+{% include 'home/footer.html' %}
+{% endblock %}
