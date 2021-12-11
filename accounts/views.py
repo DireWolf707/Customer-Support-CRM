@@ -2,9 +2,10 @@ from django.urls import reverse_lazy
 from django.contrib.auth import login
 from django.views.generic import CreateView
 from django.shortcuts import redirect
+from django.conf import settings
 from django.core.mail import send_mail
 from .forms import CustomUserCreationForm
-import requests,os
+import requests
 
 class SignUpView(CreateView):
     form_class = CustomUserCreationForm
@@ -15,9 +16,9 @@ class SignUpView(CreateView):
         self.object = form.save(commit=False)
         phone = self.object.phone
         otp=self.request.POST['otp']
-        api_key=os.environ.get("api_key","h435y8wfj3h24hy328r32b4h24j")
+        api_key=settings.API_KEY
 
-        resp = requests.post("http://127.0.0.1:8080/2FA/verify",
+        resp = requests.post("http://127.0.0.1:8080/thirdparty/otp/verify",
             json={
                 "phone": phone,
                 "otp": otp

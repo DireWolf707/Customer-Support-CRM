@@ -1,9 +1,10 @@
-import django
+import requests
 from django.views import View
 from django.shortcuts import render,redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import MessageTicketForm,CallTicketForm
 from django.core.mail import send_mail
+from django.conf import settings
 
 
 class HomeView(LoginRequiredMixin,View):
@@ -18,6 +19,15 @@ class HomeView(LoginRequiredMixin,View):
             if form.is_valid():
                 ticket = form.save(commit=False)
                 ticket.lead = request.user
+
+                requests.post("http://127.0.0.1:8080/thirdparty/ticket/chat",
+                json={
+                    "text": ticket.description,
+                    "ticket_id": str(ticket.id)
+                },headers={
+                    "private-token": settings.API_KEY
+                })
+
                 ticket.save()
                 valid =True
                 
@@ -27,6 +37,14 @@ class HomeView(LoginRequiredMixin,View):
                 ticket = form.save(commit=False)
                 ticket.lead = request.user
                 ticket.by_call = True
+
+                requests.post("http://127.0.0.1:8080/thirdparty/ticket/voice",
+                json={
+                    "phone": request.user.phone,
+                },headers={
+                    "private-token": settings.API_KEY
+                })
+
                 ticket.save()
                 valid =True
 

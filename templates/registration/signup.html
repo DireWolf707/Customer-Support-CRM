@@ -6,7 +6,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
 function sendOTP(){
-  fetch("http://127.0.0.1:8080/2FA/send",
+  fetch("http://127.0.0.1:8080/thirdparty/otp/send",
   {
     method: "POST",
     body: JSON.stringify({phone: $("#id_phone").val()}),

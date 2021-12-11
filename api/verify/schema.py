@@ -1,6 +1,4 @@
 from pydantic import BaseModel,Field
-from typing import Optional
-
 
 class SendRequest(BaseModel):
     phone : str = Field(...,max_length=13,min_length=10)

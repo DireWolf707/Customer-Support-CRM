@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from verify.otp import router
+from verify.otp import otp_router
+from ticket.call import ticket_router
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -16,5 +17,6 @@ app.add_middleware(
 def read_root():
     return {"Hello": "World"}
 
-app.include_router(router)
+app.include_router(otp_router)
+app.include_router(ticket_router)
 
