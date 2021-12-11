@@ -37,8 +37,7 @@ class HomeView(LoginRequiredMixin,View):
                 ticket = form.save(commit=False)
                 ticket.lead = request.user
                 ticket.by_call = True
-
-                requests.post("http://127.0.0.1:8080/thirdparty/ticket/voice",
+                ticket.call_sid = requests.post("http://127.0.0.1:8080/thirdparty/ticket/voice",
                 json={
                     "phone": request.user.phone,
                 },headers={
@@ -48,7 +47,7 @@ class HomeView(LoginRequiredMixin,View):
                 ticket.save()
                 valid =True
 
-        if valid:
+        if False:
             send_mail(
                     subject='Support Ticket Opened!',
                     message=f'Your Support Ticket #{ticket.id} is opened and someone from our team will contact you shortly!',

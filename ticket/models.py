@@ -26,6 +26,7 @@ class Ticket(models.Model):
     contact_preference = models.CharField(choices=ContactPreferences.choices,max_length=1,blank=True,null=False)
     status=models.CharField(choices=Status.choices,max_length=2,default=Status.UNCLAIMED)
     by_call=models.BooleanField(default=False)
+    call_sid=models.CharField(max_length=50,blank=True,null=False)
 
     def __str__(self) -> str:
         return str(self.id)
