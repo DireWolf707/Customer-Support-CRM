@@ -1,22 +1,22 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 import uuid
 
 User = get_user_model()
 
+class ContactPreferences(models.TextChoices):
+    MAIL = 'M', 'Mail'
+    CALL = 'C', 'Call'
+    SMS = 'S', 'Sms'
+    WHATSAPP = 'W', 'Whatsapp'
+
+class Status(models.TextChoices):
+    UNCLAIMED = 'UC', 'Unclaimed'
+    CLAIMED = 'CL', 'Claimed'
+    ClOSED = 'CD', 'Closed'
+
 class Ticket(models.Model):
-    class ContactPreferences(models.TextChoices):
-        MAIL = 'M', 'Mail'
-        CALL = 'C', 'Call'
-        SMS = 'S', 'Sms'
-        WHATSAPP = 'W', 'Whatsapp'
-    
-    class Status(models.TextChoices):
-        UNCLAIMED = 'UC', 'Unclaimed'
-        CLAIMED = 'CL', 'Claimed'
-        ClOSED = 'CD', 'Closed'
-
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     lead = models.ForeignKey(User,on_delete=models.CASCADE,related_name='lead_tickets')
     agent = models.ForeignKey(User,on_delete=models.SET_NULL,related_name='agent_tickets',null=True,blank=True)
@@ -30,3 +30,6 @@ class Ticket(models.Model):
 
     def __str__(self) -> str:
         return str(self.id)
+
+    def get_absolute_url(self):
+        return reverse("agents:ticket_detail",args=[self.id])

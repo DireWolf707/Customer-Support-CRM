@@ -1,13 +1,16 @@
 import requests
 from django.views import View
 from django.shortcuts import render,redirect
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
 from .forms import MessageTicketForm,CallTicketForm
 from django.core.mail import send_mail
 from django.conf import settings
 
 
-class HomeView(LoginRequiredMixin,View):
+class HomeView(LoginRequiredMixin,UserPassesTestMixin,View):
+    def test_func(self):
+        return not self.request.user.is_staff
+
     def get(self,request,*args,**kwargs):
         return render(request,"home/home.html",{"mform":MessageTicketForm(),"cform":CallTicketForm()})
     

@@ -124,6 +124,7 @@ LOGIN_REDIRECT_URL = 'ticket:home'
 LOGOUT_REDIRECT_URL = 'ticket:home'
 
 API_KEY=os.environ.get("API_KEY")
+
 DEFAULT_FROM_EMAIL = 'admin@direwolfweb.xyz'
 EMAIL_HOST = "smtp.sendgrid.net"
 EMAIL_PORT = 587
@@ -132,3 +133,6 @@ EMAIL_HOST_PASSWORD = os.environ.get("SENDGRID_API")
 EMAIL_USE_TLS = True
 EMAIL_TIMEOUT = 10
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+REDIS_HOST=os.environ.get("REDIS_HOST")
+REDIS_PORT=int(os.environ.get("REDIS_PORT"))

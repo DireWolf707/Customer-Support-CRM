@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
 from django.contrib.auth import login
+from django.contrib.auth.views import LoginView as BaseLoginView
 from django.views.generic import CreateView
 from django.shortcuts import redirect
 from django.conf import settings
@@ -39,3 +40,11 @@ class SignUpView(CreateView):
             return redirect("ticket:home")
 
         return self.render_to_response(self.get_context_data(form=form))
+
+class LoginView(BaseLoginView):
+    def form_valid(self, form) :
+        resp = super().form_valid(form)
+        if self.request.user.is_staff:
+            return redirect("agents:dashboard")
+        else:
+            return redirect("ticket:home")
