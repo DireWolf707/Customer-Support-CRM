@@ -8,8 +8,8 @@ class Settings(BaseSettings):
     app_secret : str = Field(...,env='APP_SECRET')
     symbl_app_id : str = Field(...,env='SYMBL_APP_ID')
     symbl_app_secret : str = Field(...,env='SYMBL_APP_SECRET')
-
-    #redis_url : str = Field(...,env='REDIS_URL')
+    redis_host : str = Field(...,env='REDIS_HOST')
+    redis_port : int = Field(...,env='REDIS_PORT')
 
     class Config:
         env_file = '.env'
