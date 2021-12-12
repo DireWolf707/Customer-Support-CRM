@@ -50,7 +50,7 @@ class HomeView(LoginRequiredMixin,UserPassesTestMixin,View):
                 ticket.save()
                 valid =True
 
-        if False:
+        if valid:
             send_mail(
                     subject='Support Ticket Opened!',
                     message=f'Your Support Ticket #{ticket.id} is opened and someone from our team will contact you shortly!',

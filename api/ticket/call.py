@@ -45,9 +45,8 @@ async def voice_ticket(data : schema.CallTicket,client : Client = Depends(get_tw
     # automated voice
     response = VoiceResponse()
     response.say("""
-    Call will disconnect automatically in case of silence.
     You can record your message after the beep and stop recording by pressing 0.
-    """,voice="alice")
+    """,voice="man")
     response.record(timeout=6,play_beep=True,finishOnKey="0",
     action=None,recordingStatusCallback=PUBLIC_URL+"/thirdparty/ticket/recording_hook",
     recordingStatusCallbackMethod="POST",recordingStatusCallbackEvent="completed")
@@ -107,7 +106,7 @@ async def connect_agent_hook():
             agent[1].decode("utf-8"),
             action=PUBLIC_URL+"/thirdparty/ticket/connect_agent_callback_hook",
         )
-        response.say('Goodbye')
+        response.say('Have a nice day')
         response.hangup()
     else:
         response.say("""
@@ -133,6 +132,6 @@ async def connect_agent_callback_hook(
     background_tasks.add_task(add_agent_to_queue,DialCallSid)
     
     response = VoiceResponse()
-    response.say('Goodbye')
+    response.say('Have a nice day')
     response.hangup()
     return Response(content=str(response), media_type="application/xml")

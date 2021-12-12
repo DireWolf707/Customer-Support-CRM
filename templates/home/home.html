@@ -4,6 +4,8 @@
 
 {% block script %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://studio.alan.app/web/lib/alan_lib.min.js"></script>
+
 <script>
   function pricing(){
     $("#about").hide()
@@ -21,6 +23,41 @@
     $("#about").show()
   }
 </script>
+
+<div class="alan-btn"></div>
+<script>
+    var alanBtnInstance = alanBtn({
+        key: "c6b4d3f9e37293310a3738b166334e842e956eca572e1d8b807a3e2338fdd0dc/stage",
+        onCommand: function (commandData) {
+            if (commandData.command === "gocontact") {
+                support()
+            }
+            else if (commandData.command === "addissue"){
+              $("textarea#id_description").val(commandData.issue)
+            }
+            else if(commandData.command === "sendissue"){
+              $("button#text-submit").click()         
+            }
+            else if(commandData.command === "gopricing"){
+              pricing()    
+            }
+            else if(commandData.command === "higlightnumber"){ 
+              $("h1#contacttitle").addClass("text-blue-600")
+              $("h1#contacttitle").removeClass("text-blue-600")
+              $("h1#contacttitle").addClass("text-blue-600")
+              $("h1#contacttitle").removeClass("text-blue-600")
+            }
+            else if(commandData.command === "higlighttickets"){
+              $("textarea#id_description").addClass("border-4")
+              $("textarea#id_description").removeClass("border-4")
+              $("form#contactcall").addClass("border-4")
+              $("form#contactcall").removeClass("border-4")
+            }
+        },
+        rootEl: document.getElementById("alan-btn"),
+    });
+</script>
+
 {% endblock %}
 
 {% block content %}
@@ -28,4 +65,5 @@
 {% include 'home/pricing.html' %}
 {% include 'home/support.html' %}
 {% include 'home/footer.html' %}
+
 {% endblock %}
