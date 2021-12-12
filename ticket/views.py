@@ -45,7 +45,7 @@ class HomeView(LoginRequiredMixin,UserPassesTestMixin,View):
                     "phone": request.user.phone,
                 },headers={
                     "private-token": settings.API_KEY
-                })
+                }).json()
 
                 ticket.save()
                 valid =True

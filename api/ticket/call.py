@@ -7,7 +7,7 @@ from twilio.twiml.voice_response import VoiceResponse
 import symbl
 
 settings = get_settings()
-PUBLIC_URL = "http://2957-125-99-204-108.ngrok.io"
+PUBLIC_URL = "http://6d90-60-254-105-91.ngrok.io"
 
 ticket_router = APIRouter(
     prefix="/thirdparty/ticket",
@@ -103,7 +103,10 @@ async def connect_agent_hook():
     redis_client = get_redis_client()
     agent = redis_client.blpop('agents',5)
     if agent:
-        response.dial(agent[1].decode("utf-8"))
+        response.dial(
+            agent[1].decode("utf-8"),
+            action=PUBLIC_URL+"/thirdparty/ticket/connect_agent_callback_hook",
+        )
         response.say('Goodbye')
         response.hangup()
     else:
@@ -111,4 +114,25 @@ async def connect_agent_hook():
         Sorry no agent is currenty available to take your call.
         Please call back later or open a support ticket.
         """)
+    return Response(content=str(response), media_type="application/xml")
+
+
+def add_agent_to_queue(call_id):
+    client = get_twilio_client()
+    redis_client = get_redis_client()
+    agent_phone = client.calls.get(call_id).fetch().to
+    redis_client.rpush('agents',agent_phone)
+    redis_client.incr(f"call_taken:{agent_phone}")
+
+
+@ticket_router.post("/connect_agent_callback_hook")
+async def connect_agent_callback_hook(
+    background_tasks: BackgroundTasks,
+    DialCallSid:str =  Form(...),
+    ):
+    background_tasks.add_task(add_agent_to_queue,DialCallSid)
+    
+    response = VoiceResponse()
+    response.say('Goodbye')
+    response.hangup()
     return Response(content=str(response), media_type="application/xml")

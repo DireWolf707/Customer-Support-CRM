@@ -8,6 +8,79 @@
 {% block content %}
 {% include 'agents/nav.html' %}
 
-########################
+<section class="text-gray-600 body-font">
+    <div class="flex flex-col text-right w-full mt-9">
+        <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 mr-8 pr-8 mr-24 text-gray-900">ID #{{ticket.id}}</h1>
+    </div>
+    <div class="container px-5 py-4 mx-auto flex flex-wrap">
+      <div class="lg:w-1/2 w-full mb-10 lg:mb-0 rounded-lg overflow-hidden">
+        <div class="flex-grow">
+            <h2 class="text-gray-900 text-lg title-font font-medium mt-3">{% if ticket.by_call %}Voice Message{% else %}Text Message{% endif %}</h2>
+            {% if ticket.by_call %}
+
+            {% if voice_url %}
+            <audio controls>
+                <source src="{{voice_url}}" type="audio/x-wav">
+            </audio>
+            {% else %}
+            <p class="leading-relaxed text-base">Generating Link....</p>
+            {% endif %}
+
+            {% if analytics %}
+            <h2 class="text-gray-900 text-lg title-font font-medium mt-3">Transcription</h2>
+            <p class="leading-relaxed text-base">
+            {% for message in messages %}
+                {{message}}
+            {% endfor %}
+            </p>
+            <h2 class="text-gray-900 text-lg title-font font-medium mt-3">Topics</h2>
+            <p class="leading-relaxed text-base">
+            <ol class="list-decimal">
+            {% for topic in topics %}
+                <li>{{topic}}</li>
+            {% endfor %}
+            </ol>
+            </p>
+            {% else %}
+            <p class="leading-relaxed text-base">Generating Voice Analytics....</p>
+            {% endif %}
+
+
+            {% else %}
+
+            <p class="leading-relaxed text-base">{{ticket.description}}</p>
+
+            {% if analytics %}
+            <h2 class="text-gray-900 text-lg title-font font-medium mt-3">Topics</h2>
+            <p class="leading-relaxed text-base">
+            <ol class="list-decimal">
+            {% for topic in topics %}
+                <li>{{topic}}</li>
+            {% endfor %}
+            </ol>
+            </p>
+            {% else %}
+            <p class="leading-relaxed text-base">Generating Text Analytics....</p>
+            {% endif %}
+
+            {% endif %}
+            
+        </div>
+      </div>
+      <div class="flex flex-col flex-wrap lg:py-6 -mb-10 lg:w-1/2 lg:pl-12 lg:text-left text-center">
+        <div class="flex flex-col mb-10 lg:items-start items-center">
+            <h2 class="text-gray-900 text-lg title-font font-medium mb-3">Name : {{ticket.lead.get_full_name}}</h2> 
+            <h2 class="text-gray-900 text-lg title-font font-medium mb-3">Email : {{lead.email}}</h2> 
+            <h2 class="text-gray-900 text-lg title-font font-medium mb-3">Phone : {{lead.phone}}</h2> 
+            <h2 class="text-gray-900 text-lg title-font font-medium mb-3">Contact Preference : {% if ticket.contact_preference %}{{ticket.get_contact_preference_display}}{% else %}None{% endif %}</h2> 
+            <h3 class="text-gray-900 text-base title-font font-small mb-3">Ticket opened at : {{ticket.open_time}}</h3> 
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="inline-flex text-white bg-indigo-500 border-0 py-2 px-3 mr-1 focus:outline-none hover:bg-indigo-600 rounded">Close</button>
+            </form>
+        </div>
+      </div>
+    </div>
+  </section>
 
 {% endblock %}

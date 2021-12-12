@@ -136,3 +136,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 REDIS_HOST=os.environ.get("REDIS_HOST")
 REDIS_PORT=int(os.environ.get("REDIS_PORT"))
+
+SYMBL_APP_ID = os.environ.get("SYMBL_APP_ID")
+SYMBL_APP_SECRET = os.environ.get("SYMBL_APP_SECRET")
+

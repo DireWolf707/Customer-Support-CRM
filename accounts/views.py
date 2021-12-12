@@ -1,12 +1,15 @@
 from django.urls import reverse_lazy
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView as BaseLoginView
+from django.contrib.auth.views import LogoutView as BaseLogoutView
 from django.views.generic import CreateView
 from django.shortcuts import redirect
 from django.conf import settings
 from django.core.mail import send_mail
 from .forms import CustomUserCreationForm
-import requests
+import requests,redis
+
+redis_client = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0)
 
 class SignUpView(CreateView):
     form_class = CustomUserCreationForm
@@ -45,6 +48,13 @@ class LoginView(BaseLoginView):
     def form_valid(self, form) :
         resp = super().form_valid(form)
         if self.request.user.is_staff:
+            redis_client.rpush('agents',self.request.user.phone)
             return redirect("agents:dashboard")
         else:
             return redirect("ticket:home")
+
+class LogoutView(BaseLogoutView):
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_staff:
+            redis_client.lrem('agents',1,self.request.user.phone)
+        return super().dispatch(request, *args, **kwargs)
